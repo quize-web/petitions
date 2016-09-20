@@ -8,7 +8,7 @@ final class database
   private function __clone() {}
 
   private static $host = "localhost";
-  private static $dbname = "mvc-shop";
+  private static $dbname = "petitions";
   private static $user = "root";
   private static $password = "";
 

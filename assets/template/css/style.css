@@ -23,6 +23,10 @@ body.admin-panel {
   background-color: #f5f5f5;
 }
 
+span.navbar-brand {
+  cursor: default;
+}
+
 
 /* Custom page CSS
 -------------------------------------------------- */

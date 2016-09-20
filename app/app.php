@@ -13,6 +13,7 @@ require_once("classes/user.php");
 require_once("classes/mail.php");
 require_once("classes/recaptcha.php");
 require_once("classes/alerts.php");
+require_once("classes/timer.php");
 
 
 database::start();

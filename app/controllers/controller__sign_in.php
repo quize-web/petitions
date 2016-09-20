@@ -4,19 +4,24 @@ class controller__sign_in extends controller
 {
 
   public function action__index() {
+    route::check(user::session(false));
+
     $this->view->generate("main", "sign_in");
   }
 
 
   public function action__auth() {
-    route::check_post_data();
+    route::check(user::post_data());
+
     if( ($error = $this->model->auth()) !== true ) $this->view->generate("main", "sign_in", $error);
-    else route::redirect();
+    else route::redirect("index");
   }
 
 
 
   public function action__forgot() {
+    route::check(user::session(false));
+
     if(empty($_POST)) $this->view->generate("main", "sign_in--forgot");
     else {
       if( ($error = $this->model->forgot()) !== true ) $this->view->generate("main", "sign_in--forgot", $error);
@@ -28,9 +33,10 @@ class controller__sign_in extends controller
 
 
   public function action__recovery() {
+    route::check(user::session(false));
 
     if(empty($_POST)) {
-      route::check_get_data(true, "hash", 1);
+      route::check(user::get_data(true, "hash", 1));
       user::have_hash($_GET["hash"]);
       $this->model->prerecovery();
       $this->view->generate("main", "sign_in--recovery");

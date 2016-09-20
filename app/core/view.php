@@ -4,12 +4,13 @@ class view
 {
 
   public function generate($template, $content, $data = array()) {
-    $content = route::$views_path."/content__$content.php";
-    include_once(route::$views_path."/template__$template.php");
+    $content = route::$views_path."/".route::$contents_path."/content__$content.php";
+    include_once(route::$views_path."/".route::$templates_path."/template__$template.php");
+    exit();
   }
 
   public static function unit($name) {
-    include_once(route::$views_path."/unit__$name.php");
+    include(route::$views_path."/".route::$units_path."/unit__$name.php");
   }
 
 }

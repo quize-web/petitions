@@ -3,8 +3,8 @@
 class recaptcha
 {
 
-  const key = "6LexySkTAAAAAMbzM3Ata0YW13Sg6K1qNgGI9pFW";
-  const secret_key = "6LexySkTAAAAAB04XAbe3Z39t-06F3LUnrPndk91";
+  const key = "6LcO_wYUAAAAALNbujskNGAiPVDRmUJw6sKnDcdB";
+  const secret_key = "6LcO_wYUAAAAANepuRbhOEfhlj7gW5lGRWD6J9XQ";
 
   static public function verify() {
 

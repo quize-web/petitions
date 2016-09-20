@@ -9,6 +9,7 @@ final class mail
 
   const server_inbox = "quize.web@yandex.ru";
   const site_inbox = "quize.web@yandex.ru";
+  const site_name = "PETITIONS Shop";
 //  const site_inbox = "mail@mvc-shop.ru";
 
   private static $mail;
@@ -46,10 +47,10 @@ final class mail
     $mail = self::$mail;
 
     try {
-      $mail->setFrom(self::site_inbox, "MVC-SHOP");
-      $mail->addAddress($to, "Пользователь MVC-SHOP");
-      $mail->addCC(self::server_inbox, "Администратор MVC-SHOP");
-      $mail->addReplyTo(self::site_inbox, "MVC-SHOP REPLY TO");
+      $mail->setFrom(self::site_inbox, self::site_name);
+      $mail->addAddress($to, "Пользователь ".self::site_name);
+      $mail->addCC(self::server_inbox, "Администратор ".self::site_name);
+      $mail->addReplyTo(self::site_inbox, self::site_name." REPLY TO");
       $mail->Subject = $subject;
       $mail->Body = $content;
       $mail->AltBody = "ALT_$content";

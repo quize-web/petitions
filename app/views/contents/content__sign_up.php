@@ -3,7 +3,6 @@
 
   <div class="container">
     <h1>Регистрация</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores ducimus excepturi exercitationem maxime natus obcaecati placeat? Commodi doloribus est suscipit?</p>
   </div>
 
 
@@ -27,25 +26,11 @@
         </div>
       </div>
       <div class="row">
-        <div class="form-group col-sm-4">
-          <label for="name">Ваше имя:</label>
-          <input type="text" name="name" id="name" class="form-control" minlength="2" maxlength="32" placeholder="Не обязательное поле">
-        </div>
-        <div class="form-group col-sm-4">
-          <label for="lastname">Ваша фамилия:</label>
-          <input type="text" name="lastname" id="lastname" class="form-control" minlength="2" maxlength="32" placeholder="Не обязательное поле">
-        </div>
-        <div class="form-group col-sm-4">
-          <label for="birthday">Ваша дата рождения:</label>
-          <input type="date" name="birthday" id="birthday" class="form-control" placeholder="Не обязательное поле">
-        </div>
-      </div>
-      <div class="row">
         <div class="form-group col-sm-6">
           <div class="checkbox">
             <label>
               <input type="checkbox" name="user_agreement" id="user_agreement">
-              Я прочел и принимаю пользовательское соглашение
+              Я прочел и принимаю <a href="#" target="_blank">пользовательское соглашение</a>
             </label>
           </div>
         </div>

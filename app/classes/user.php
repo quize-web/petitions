@@ -44,8 +44,10 @@ final class user
 
 
 
-  static public function session_exist() {
-    if(isset($_SESSION["user"]["id"])) return true; else return false;
+  static public function session($condition = true) {
+    if($condition === true) { if(isset($_SESSION["user"]["id"])) return true; else return false; }
+    elseif($condition === false) { if(!isset($_SESSION["user"]["id"])) return true; else return false; }
+    else return false;
   }
 
 
@@ -56,17 +58,96 @@ final class user
 
     switch($column) {
       case "id": return $data["id"]; break;
+      case "hash": return$data["hash"]; break;
       case "access": return $data["access"]; break;
       case "is_active": return $data["is_active"]; break;
-      case "status": return $data["status"]; break;
       case "email": return $data["email"]; break;
-      case "name": return $data["name"]; break;
-      case "lastname": return $data["lastname"]; break;
-      case "birthday": return $data["birthday"]; break;
+      case "status": return $data["status"]; break;
+//      case "name": return $data["name"]; break;
+//      case "lastname": return $data["lastname"]; break;
+//      case "birthday": return $data["birthday"]; break;
     }
 
     return false;
 
+  }
+
+
+
+  static public function is_active($condition = true) {
+    if($condition === true) { if(self::get("is_active") == 1) return true; else return false; }
+    elseif($condition === false) { if(self::get("is_active") == 0) return true; else return false; }
+    else return false;
+  }
+
+
+
+  static public function access($who = "user") {
+    switch ($who) {
+      case "user": if( (self::get("access") == "-u") || (self::user_mode()) ) return true; else return false;
+      case "admin": if(self::get("access") == "-a") return true; else return false;
+      default: return false;
+    }
+  }
+
+
+
+  static public function user_mode($condition = true) {
+    if($condition === true) {
+      if( (isset($_SESSION["admin"]["user_mode"])) && ($_SESSION["admin"]["user_mode"] == 1) ) return true; else return false;
+    } elseif($condition === false) {
+      if( (!isset($_SESSION["admin"]["user_mode"])) || ($_SESSION["admin"]["user_mode"] == 0) ) return true; else return false;
+    } else return false;
+  }
+
+
+
+  public static function post_data($condition = true, $post_have = "", $post_count = "") {
+
+    if($condition === true) {
+      if(empty($_POST)) return false;
+    } elseif($condition === false) {
+      if(!empty($_POST)) false;
+    }
+
+    if(!empty($post_have)) {
+      if(empty($_POST[$post_have])) false;
+    }
+
+    if(!empty($post_count)) {
+      if(count($_POST) != $post_count) false;
+    }
+
+    return true;
+  }
+
+
+
+  public static function get_data($condition = true, $get_have = "", $get_count = "") {
+
+    if($condition === true) {
+      if(empty($_GET)) false;
+    } elseif($condition === false) {
+      if(!empty($_GET)) false;
+    }
+
+    if(!empty($get_have)) {
+      if(empty($_GET[$get_have])) false;
+    }
+
+    if(!empty($get_count)) {
+      if(count($_GET) != $get_count) false;
+    }
+
+    return true;
+
+  }
+
+
+
+  static public function have_hash($hash) {
+    if(database::check("users", ["hash" => $hash])) return true;
+    else { route::error(); return false; }
   }
 
 
@@ -77,7 +158,7 @@ final class user
       $future_hash = $value_01.$value_02;
     } elseif(isset($_POST["email"])) {
       $future_hash = $_POST["email"].time();
-    } elseif(self::session_exist()) {
+    } elseif(self::session()) {
       $future_hash = self::get("email").time();
     } else {
       $future_hash = "random".time();
@@ -121,12 +202,6 @@ final class user
     $hash = self::update_hash($id, true);
     setcookie("user[id]", $id, (time()+3600*24*7), "/");
     setcookie("user[hash]", $hash, (time()+3600*24*7), "/");
-  }
-
-
-
-  static public function have_hash($hash) {
-    if(database::check("users", ["hash" => $hash])) return true; else route::error();
   }
 
 

@@ -14,6 +14,9 @@ final class route
   public static $action_url;
 
   public static $views_path;
+    public static $templates_path;
+    public static $contents_path;
+    public static $units_path;
   public static $models_path;
   public static $controllers_path;
 
@@ -36,10 +39,16 @@ final class route
     self::$current_url = self::$host.$_SERVER["REQUEST_URI"];
 
     self::$views_path = "app/views";
+      self::$templates_path = "templates";
+      self::$contents_path = "contents";
+      self::$units_path = "units";
     self::$models_path = "app/models";
     self::$controllers_path = "app/controllers";
 
     $views_path = self::$views_path;
+      $templates_path = self::$templates_path;
+      $contents_path = self::$contents_path;
+      $units_path = self::$units_path;
     $models_path = self::$models_path;
     $controllers_path = self::$controllers_path;
 
@@ -109,69 +118,31 @@ final class route
 
 
 
-  public static function check_post_data($condition = true, $post_have = "", $post_count = "") {
-
-    if($condition === true) {
-      if(empty($_POST)) self::error();
-    } elseif($condition === false) {
-      if(!empty($_POST)) self::error();
-    }
-
-    if(!empty($post_have)) {
-      if(empty($_POST[$post_have])) self::error();
-    }
-
-    if(!empty($post_count)) {
-      if(count($_POST) != $post_count) self::error();
-    }
-
-  }
-
-
-
-  public static function check_get_data($condition = true, $get_have = "", $get_count = "") {
-
-    if($condition === true) {
-      if(empty($_GET)) self::error();
-    } elseif($condition === false) {
-      if(!empty($_GET)) self::error();
-    }
-
-    if(!empty($get_have)) {
-      if(empty($_GET[$get_have])) self::error();
-    }
-
-    if(!empty($get_count)) {
-      if(count($_GET) != $get_count) self::error();
-    }
-
-  }
-
-
-
-  public static function check_session($condition = true) {
-    if($condition === true) {
-      if(!user::session_exist()) self::error();
-    } elseif($condition === false) {
-      if(user::session_exist()) self::error();
-    }
-  }
-
-
-
   public static function redirect($to = "index") {
 
     switch ($to) {
-      case "to_controller_index": header("Location: ".self::$controller_url); break;
+      case "controller_index": header("Location: ".self::$controller_url); break;
       case "index": header("Location: ".self::$host); break;
-      default: header("Location: ".self::$host); break;
+      default: header("Location: ".self::$host.$to); break;
     }
 
   }
 
 
 
-  public static function check_page($url) {
+  public static function check($function, $action_function = "default") {
+    if(!$function) {
+      switch ($action_function) {
+        case "default": self::error(); break;
+        default: return $action_function; break;
+      }
+    }
+    return true;
+  }
+
+
+
+  public static function page($url) {
     if($_SERVER["REQUEST_URI"] == $url) return true; else return false;
   }
 
