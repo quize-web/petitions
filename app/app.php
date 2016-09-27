@@ -12,11 +12,12 @@ require_once("core/route.php");
 require_once("classes/user.php");
 require_once("classes/mail.php");
 require_once("classes/recaptcha.php");
-require_once("classes/alerts.php");
 require_once("classes/timer.php");
+require_once("classes/generate.php");
 
 
 database::start();
+config::start();
 user::start();
 mail::start();
 route::start();

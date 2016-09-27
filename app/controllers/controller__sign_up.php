@@ -10,15 +10,15 @@ class controller__sign_up extends controller
   }
 
   public function action__save() {
-    route::check(user::post_data());
+    route::check(route::post_data());
 
-    if($error = $this->model->verify()) { $this->view->generate("main", "sign_up", $error); exit(); }
+    if($data = $this->model->verify()) { $this->view->generate("main", "sign_up", $data); exit(); }
     if($email = $this->model->save()) $this->view->generate("main", "sign_up--save", $email);
-      else $this->view->generate("main", "sign_up", $error = ["error" => ["database" => "Ошибка при добавлении нового пользователя в базу данных!"]]);
+      else $this->view->generate("main", "sign_up", $data = ["error" => ["database" => "Ошибка при добавлении нового пользователя в базу данных!"]]);
   }
 
   public function action__activate() {
-    route::check(user::get_data(true, "hash", 1));
+    route::check(route::get_data(true, "hash", 1));
 
     if($this->model->activate()) $this->view->generate("main", "sign_up--activate");
     else route::error();

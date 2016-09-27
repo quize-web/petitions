@@ -11,9 +11,9 @@ class model__sign_in
         (strlen($_POST["email"]) > 64) ||
         (strlen($_POST["password"]) < 6) ||
         (!(filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL)))
-    ) $error["error"]["auth"] = "Пароль или E-mail введены не корректно!";
+    ) $data["alerts"]["error"]["auth"] = "Пароль или E-mail введены не корректно!";
 
-    if(!recaptcha::verify()) $error["error"]["recaptcha"] = "Вы не подтвердили, что Вы - человек.";
+    if(!recaptcha::verify()) $data["alerts"]["error"]["recaptcha"] = "Вы не подтвердили, что Вы - человек.";
 
 
     $filters = array(
@@ -28,11 +28,11 @@ class model__sign_in
     if($id = database::check("users", ["email" => $email], true)) {
       if($password_hash = database::check("users", ["id" => $id], true, "password")) {
         if(password_verify($password, $password_hash)) {
-        } else $error["error"]["auth"] = "Пароль или E-mail введены не корректно!";
-      } else $error["error"]["auth"] = "Пароль или E-mail введены не корректно!";
-    } else $error["error"]["auth"] = "Пароль или E-mail введены не корректно!";
+        } else $data["alerts"]["error"]["auth"] = "Пароль или E-mail введены не корректно!";
+      } else $data["alerts"]["error"]["auth"] = "Пароль или E-mail введены не корректно!";
+    } else $data["alerts"]["error"]["auth"] = "Пароль или E-mail введены не корректно!";
 
-    if(isset($error)) return $error;
+    if(isset($data)) return $data;
 
     $_SESSION["user"]["id"] = $id;
 
@@ -51,11 +51,11 @@ class model__sign_in
         (empty($_POST["email"])) ||
         (strlen($_POST["email"]) > 64) ||
         (!(filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL)))
-    ) $error["error"]["auth"] = "E-mail введен не корректно!";
+    ) $data["alerts"]["error"]["auth"] = "E-mail введен не корректно!";
 
-    if (!recaptcha::verify()) $error["error"]["recaptcha"] = "Вы не подтвердили, что Вы - человек.";
+    if (!recaptcha::verify()) $data["alerts"]["error"]["recaptcha"] = "Вы не подтвердили, что Вы - человек.";
 
-    if(isset($error)) return $error;
+    if(isset($data)) return $data;
 
 
     $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
@@ -84,10 +84,10 @@ class model__sign_in
 
   public function recovery() {
 
-    if( (empty($_POST["password"])) || (strlen($_POST["password"]) < 6) ) { $error["error"]["password"] = "Пароль слишком короткий!";
-    } elseif (($_POST["password"]) !== ($_POST["password_verify"])) $error["error"]["password"] = "Пароли не совпадают!";
-    if(!recaptcha::verify()) $error["error"]["recaptcha"] = "Вы не подтвердили, что Вы - человек.";
-    if(isset($error)) return $error;
+    if( (empty($_POST["password"])) || (strlen($_POST["password"]) < 6) ) { $data["alerts"]["error"]["password"] = "Пароль слишком короткий!";
+    } elseif (($_POST["password"]) !== ($_POST["password_verify"])) $data["alerts"]["error"]["password"] = "Пароли не совпадают!";
+    if(!recaptcha::verify()) $data["alerts"]["error"]["recaptcha"] = "Вы не подтвердили, что Вы - человек.";
+    if(isset($data)) return $data;
 
     $password = filter_var($_POST["password"], FILTER_SANITIZE_SPECIAL_CHARS);
     $hash_options = ["salt" => md5("PrintScanCopy"), "cost" => 12];

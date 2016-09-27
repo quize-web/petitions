@@ -12,7 +12,7 @@
       <div class="row">
         <div class="form-group col-xs-12">
           <label for="email">Ваш E-mail адрес:</label>
-          <input type="email" name="email" id="email" class="form-control" maxlength="64" placeholder="Обязательное поле" required>
+          <input type="email" name="email" id="email" class="form-control" placeholder="Обязательное поле" required>
         </div>
       </div>
       <div class="row">
@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <?php alerts::show($data); ?>
+      <?php generate::alerts($data); ?>
 
       <div class="row">
         <div class="col-sm-6">

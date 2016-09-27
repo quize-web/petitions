@@ -60,6 +60,8 @@ final class route
 
     if(!empty($address[1])) {
       $controller_name = $address[1];
+      $controller_name = explode("?", $controller_name); // убираем гет запрос, если вдруг он есть и мешает найти наш контроллер
+      $controller_name = $controller_name["0"];
     }
 
     if(!empty($address[2])) {
@@ -118,13 +120,71 @@ final class route
 
 
 
-  public static function redirect($to = "index") {
+  public static function post_data($condition = true, $post_have = "", $post_count = "") {
+
+    if($condition === true) {
+      if(empty($_POST)) return false;
+    } elseif($condition === false) {
+      if(!empty($_POST)) return false;
+    }
+
+    if(!empty($post_have)) {
+      if(empty($_POST[$post_have])) return false;
+    }
+
+    if(!empty($post_count)) {
+      if(count($_POST) != $post_count) return false;
+    }
+
+    return true;
+  }
+
+
+
+  public static function get_data($condition = true, $get_have = "", $get_count = "") {
+
+    if($condition === true) {
+      if(empty($_GET)) return false;
+    } elseif($condition === false) {
+      if(!empty($_GET)) return false;
+    }
+
+    if(!empty($get_have)) {
+      if(empty($_GET[$get_have])) return false;
+    }
+
+    if(!empty($get_count)) {
+      if(count($_GET) != $get_count) return false;
+    }
+
+    return true;
+
+  }
+
+
+
+  public static function redirect($to = "index", $get_params = []) {
+
+    if(is_array($get_params)) {
+      $get_string = "";
+      if(!empty($get_params)) {
+        $get_string = "?";
+        foreach($get_params as $key => $value) {
+          if($get_string == "?") $get_string .= "$key=$value";
+          else $get_string .= "&$key=$value";
+        }
+      }
+    } else $get_string = $get_params;
 
     switch ($to) {
-      case "controller_index": header("Location: ".self::$controller_url); break;
-      case "index": header("Location: ".self::$host); break;
-      default: header("Location: ".self::$host.$to); break;
+      case "self": header("Location: ".self::$current_url.$get_string); break;
+      case "action": header("Location: ".self::$action_url.$get_string); break;
+      case "controller": header("Location: ".self::$controller_url.$get_string); break;
+      case "index": header("Location: ".self::$host.$get_string); break;
+      default: header("Location: ".self::$host.$to.$get_string); break;
     }
+
+    exit();
 
   }
 
@@ -146,4 +206,103 @@ final class route
     if($_SERVER["REQUEST_URI"] == $url) return true; else return false;
   }
 
+
+
+  public static function array_to_string($data, $delimiter = "&", $deep_delimiter = "__", $return_string = true, $get_key = "") {
+    $array = [];
+    $get_value = "";
+    $string = "";
+
+
+    if(!empty($data)) {
+      foreach($data as $key => $value) {
+        $get_key .= $key.$deep_delimiter;
+
+        if(is_array($value)) {
+          $array = array_merge($array, self::array_to_string($value, "&", "__", false, $get_key));
+          $get_key = trim($get_key, $deep_delimiter);
+          $get_key = trim($get_key, $key);
+        } else {
+          $get_key = trim($get_key, $deep_delimiter);
+          $array[$get_key] = $value;
+          $get_key = trim($get_key, $key);
+        }
+
+      }
+    }
+
+
+    if($return_string === false) return $array;
+    else {
+      foreach($array as $key => $value) {
+        $string .= "$key=$value".$delimiter;
+      }
+      $string = trim($string, $delimiter);
+      return $string;
+    }
+  }
+
+
+
+  public static function string_to_array($string, $delimiter = "&", $deep_delimiter = "__", $from_array = false) {
+
+    if($from_array === false) {
+
+      $inner_array = explode($delimiter, $string);
+      $outer_array = [];
+
+      foreach($inner_array as $key => $value) {
+        $element = explode("=", $value); // $element: [0] = key, [1] = value;
+
+        if(preg_match("/$deep_delimiter/", $element[0])) {
+          $deep = explode($deep_delimiter, $element[0]);
+          $code = '$outer_array';
+          $i = 0;
+          foreach($deep as $level) {
+            $code .= '[$deep['.$i++.']]';
+          }
+          $code .= ' = $element[1];';
+          eval($code);
+
+        } else $outer_array[$element[0]] = $element[1];
+      }
+
+      return $outer_array;
+
+
+    } else {
+
+      $outer_array = [];
+
+      foreach($string as $key => $value) {
+
+        if(preg_match("/$deep_delimiter/", $key)) {
+          $deep = explode($deep_delimiter, $key);
+          $code = '$outer_array';
+          $i = 0;
+          foreach($deep as $level) {
+            $code .= '[$deep['.$i++.']]';
+          }
+          $code .= ' = $value;';
+          eval($code);
+
+        } else $outer_array[$key] = $value;
+      }
+
+      return $outer_array;
+
+      }
+
+  }
+
 }
+
+
+
+
+
+
+
+
+
+

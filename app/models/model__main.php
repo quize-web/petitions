@@ -12,6 +12,10 @@ class model__main extends model
         [ "title" => "Заголовок записи 3",
             "content" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum, voluptatibus." ],
         [ "title" => "Заголовок записи 4",
+            "content" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum, voluptatibus." ],
+        [ "title" => "Заголовок записи 5",
+            "content" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum, voluptatibus." ],
+        [ "title" => "Заголовок записи 6",
             "content" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum, voluptatibus." ]
     );
     return $posts;

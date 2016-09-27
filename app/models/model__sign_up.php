@@ -5,20 +5,20 @@ class model__sign_up
 
   public function verify() {
 
-    if( (empty($_POST["email"])) || (!(filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL))) || (strlen($_POST["email"]) > 64) ) { $error["error"]["email"] = "Введите E-mail корректно!";
-    } elseif(database::check("users", ["email" => $_POST["email"]])) $error["error"]["email"] = "Пользователь с такой электронной почтой уже существует!";
-    if( (empty($_POST["password"])) || (strlen($_POST["password"]) < 6) ) { $error["error"]["password"] = "Пароль слишком короткий!";
-    } elseif (($_POST["password"]) !== ($_POST["password_verify"])) $error["error"]["password"] = "Пароли не совпадают!";
-    if(!isset($_POST["user_agreement"])) $error["error"]["user_agreement"] = "Необходимо принять пользовательское соглашение!";
-    if(!recaptcha::verify()) $error["error"]["recaptcha"] = "Вы не подтвердили, что Вы - человек.";
+    if( (empty($_POST["email"])) || (!(filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL))) || (strlen($_POST["email"]) > 64) ) { $data["alerts"]["error"]["email"] = "Введите E-mail корректно!";
+    } elseif(database::check("users", ["email" => $_POST["email"]])) $data["alerts"]["error"]["email"] = "Пользователь с такой электронной почтой уже существует!";
+    if( (empty($_POST["password"])) || (strlen($_POST["password"]) < 6) ) { $data["alerts"]["error"]["password"] = "Пароль слишком короткий!";
+    } elseif (($_POST["password"]) !== ($_POST["password_verify"])) $data["alerts"]["error"]["password"] = "Пароли не совпадают!";
+    if(!isset($_POST["user_agreement"])) $data["alerts"]["error"]["user_agreement"] = "Необходимо принять пользовательское соглашение!";
+    if(!recaptcha::verify()) $data["alerts"]["error"]["recaptcha"] = "Вы не подтвердили, что Вы - человек.";
 
-//    if(!empty($_POST["birthday"])) if(!filter_input(INPUT_POST, "birthday", FILTER_SANITIZE_NUMBER_FLOAT)) $error["error"]["birthday"] = "Введите дату корректно!";
-//    if(!empty($_POST["name"])) if(strlen($_POST["name"]) < 2) $error["error"]["name"] = "Введите корректное имя! (слишком короткое)";
-//                               elseif (strlen($_POST["name"]) > 32) $error["error"]["name"] = "Введите корректное имя! (слишком длинное)";
-//    if(!empty($_POST["lastname"])) if(strlen($_POST["lastname"]) < 2) $error["error"]["lastname"] = "Введите корректную фамилию! (слишком короткая)";
-//                                   elseif (strlen($_POST["lastname"]) > 32) $error["error"]["lastname"] = "Введите корректную фамилию! (слишком длинная)";
+//    if(!empty($_POST["birthday"])) if(!filter_input(INPUT_POST, "birthday", FILTER_SANITIZE_NUMBER_FLOAT)) $data["alerts"]["error"]["birthday"] = "Введите дату корректно!";
+//    if(!empty($_POST["name"])) if(strlen($_POST["name"]) < 2) $data["alerts"]["error"]["name"] = "Введите корректное имя! (слишком короткое)";
+//                               elseif (strlen($_POST["name"]) > 32) $data["alerts"]["error"]["name"] = "Введите корректное имя! (слишком длинное)";
+//    if(!empty($_POST["lastname"])) if(strlen($_POST["lastname"]) < 2) $data["alerts"]["error"]["lastname"] = "Введите корректную фамилию! (слишком короткая)";
+//                                   elseif (strlen($_POST["lastname"]) > 32) $data["alerts"]["error"]["lastname"] = "Введите корректную фамилию! (слишком длинная)";
 
-    if(isset($error)) return $error; else return false;
+    if(isset($data)) return $data; else return false;
 
   }
 

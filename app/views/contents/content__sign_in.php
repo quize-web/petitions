@@ -23,7 +23,7 @@
       <div class="row">
       </div>
 
-      <?php alerts::show($data); ?>
+      <?php generate::alerts($data); ?>
 
       <div class="row">
         <div class="form-group col-sm-6">

@@ -6,9 +6,9 @@
 <!--          <img src="/assets/template/img/diamond.svg" alt="logo" title="diamond" height="20">-->
 <!--        </a>-->
         <?php if(route::page("/")): ?>
-          <span class="navbar-brand"><?php echo config::site_name; ?></span>
+          <span class="navbar-brand"><?php echo config::$site_name; ?></span>
         <?php else: ?>
-          <a class="navbar-brand" href="/"><?php echo config::site_name; ?></a>
+          <a class="navbar-brand" href="/"><?php echo config::$site_name; ?></a>
         <?php endif; ?>
       </div>
       <div class="navbar-right pull-right">

@@ -102,49 +102,6 @@ final class user
 
 
 
-  public static function post_data($condition = true, $post_have = "", $post_count = "") {
-
-    if($condition === true) {
-      if(empty($_POST)) return false;
-    } elseif($condition === false) {
-      if(!empty($_POST)) false;
-    }
-
-    if(!empty($post_have)) {
-      if(empty($_POST[$post_have])) false;
-    }
-
-    if(!empty($post_count)) {
-      if(count($_POST) != $post_count) false;
-    }
-
-    return true;
-  }
-
-
-
-  public static function get_data($condition = true, $get_have = "", $get_count = "") {
-
-    if($condition === true) {
-      if(empty($_GET)) false;
-    } elseif($condition === false) {
-      if(!empty($_GET)) false;
-    }
-
-    if(!empty($get_have)) {
-      if(empty($_GET[$get_have])) false;
-    }
-
-    if(!empty($get_count)) {
-      if(count($_GET) != $get_count) false;
-    }
-
-    return true;
-
-  }
-
-
-
   static public function have_hash($hash) {
     if(database::check("users", ["hash" => $hash])) return true;
     else { route::error(); return false; }

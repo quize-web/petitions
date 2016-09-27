@@ -3,14 +3,14 @@
 
   <div class="container">
     <h1>Восстановление пароля</h1>
-    <?php if(!empty($data["info"]["success"])): ?>
-        <p><?php echo $data["info"]["success"]; ?></p>
+    <?php if(!empty($data["alerts"]["info"]["success"])): ?>
+        <p><?php echo $data["alerts"]["info"]["success"]; ?></p>
         <p><a href="<?php echo route::$controller_url ?>" class="btn btn-primary btn-lg">Войти</a></p>
     <?php endif; ?>
   </div>
 
 
-  <?php if(empty($data["info"]["success"])): ?>
+  <?php if(empty($data["alerts"]["info"]["success"])): ?>
     <div class="container">
       <form action="<?php echo route::$controller_url ?>/recovery" method="post">
 
@@ -25,7 +25,7 @@
           </div>
         </div>
 
-        <?php alerts::show($data); ?>
+        <?php generate::alerts($data); ?>
 
         <div class="row">
           <div class="form-group col-sm-6">
