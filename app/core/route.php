@@ -101,7 +101,7 @@ final class route
 
   }
 
-
+//////////////////////////////////////////////
 
   public static function error($type = "404") {
 
@@ -118,9 +118,9 @@ final class route
 
   }
 
+//////////////////////////////////////////////
 
-
-  public static function post_data($condition = true, $post_have = "", $post_count = "") {
+  public static function post_data($condition = true, $post_have = [], $post_count = "") {
 
     if($condition === true) {
       if(empty($_POST)) return false;
@@ -128,20 +128,26 @@ final class route
       if(!empty($_POST)) return false;
     }
 
-    if(!empty($post_have)) {
-      if(empty($_POST[$post_have])) return false;
-    }
-
     if(!empty($post_count)) {
       if(count($_POST) != $post_count) return false;
+    }
+
+    if(!empty($post_have)) {
+      foreach($post_have as $key => $value) {
+        if( (!isset($value)) || (empty($value)) || ($value == "") || ($value == "random") )  {
+          if( (!isset($_POST[$key])) || (empty($_POST[$key])) ) return false;
+        } else {
+          if( (!isset($_POST[$key])) || (empty($_POST[$key])) || ($_POST[$key] != $value) ) return false;
+        }
+      }
     }
 
     return true;
   }
 
+//////////////////////////////////////////////
 
-
-  public static function get_data($condition = true, $get_have = "", $get_count = "") {
+  public static function get_data($condition = true, $get_have = [], $get_count = "") {
 
     if($condition === true) {
       if(empty($_GET)) return false;
@@ -149,19 +155,25 @@ final class route
       if(!empty($_GET)) return false;
     }
 
-    if(!empty($get_have)) {
-      if(empty($_GET[$get_have])) return false;
-    }
-
     if(!empty($get_count)) {
       if(count($_GET) != $get_count) return false;
+    }
+
+    if(!empty($get_have)) {
+      foreach($get_have as $key => $value) {
+        if( (!isset($value)) || (empty($value)) || ($value == "") || ($value == "random") )  {
+          if( (!isset($_GET[$key])) || (empty($_GET[$key])) ) return false;
+        } else {
+          if( (!isset($_GET[$key])) || (empty($_GET[$key])) || ($_GET[$key] != $value) ) return false;
+        }
+      }
     }
 
     return true;
 
   }
 
-
+//////////////////////////////////////////////
 
   public static function redirect($to = "index", $get_params = []) {
 
@@ -188,7 +200,7 @@ final class route
 
   }
 
-
+//////////////////////////////////////////////
 
   public static function check($function, $action_function = "default") {
     if(!$function) {
@@ -200,13 +212,13 @@ final class route
     return true;
   }
 
-
+//////////////////////////////////////////////
 
   public static function page($url) {
     if($_SERVER["REQUEST_URI"] == $url) return true; else return false;
   }
 
-
+//////////////////////////////////////////////
 
   public static function array_to_string($data, $delimiter = "&", $deep_delimiter = "__", $return_string = true, $get_key = "") {
     $array = [];
@@ -242,7 +254,7 @@ final class route
     }
   }
 
-
+//////////////////////////////////////////////
 
   public static function string_to_array($string, $delimiter = "&", $deep_delimiter = "__", $from_array = false) {
 
@@ -293,6 +305,12 @@ final class route
 
       }
 
+  }
+
+  //////////////////////////////////////////////
+
+  public static function action($value) {
+    if( (isset($_GET["action"])) && ($_GET["action"] == $value) ) return true; else return false;
   }
 
 }

@@ -11,7 +11,7 @@
 
     <div class="col-sm-4 col-md-5">
       <div class="form-group">
-        <input class="form-control" type="text" name="name" placeholder="Название шаблона" value="<?php echo @$data["petition"]["name"]; ?>" required maxlength="128" minlength="2">
+        <input class="form-control" type="text" name="name" placeholder="Название шаблона" minlength="2" maxlength="128" value="<?php echo @$data["petition"]["name"]; ?>" required>
       </div>
     </div>
 
@@ -21,11 +21,10 @@
           <div class="input-group-addon">Категория</div>
           <select class="form-control" name="category_id" required>
             <?php foreach($categories = database::get("petition_categories") as $row => $columns): ?>
-              <?php if($columns["id"] == @$data["petition"]["category_id"]): ?>
-                <option value="<?php echo $columns["id"]; ?>" selected><?php echo $columns["name"]; ?></option>
-              <?php else: ?>
-                <option value="<?php echo $columns["id"]; ?>"><?php echo $columns["name"]; ?></option>
-              <?php endif; ?>
+                <option value="<?php echo $columns["id"]; ?>"
+                    <?php if($columns["id"] == @$data["petition"]["category_id"]) echo "selected"; ?>>
+                  <?php echo $columns["name"]; ?>
+                </option>
             <?php endforeach; ?>
           </select>
         </div>
@@ -50,59 +49,7 @@
 
   <div class="row">
 
-    <div class="col-sm-6">
-      <button class="btn btn-default">Добавить поле</button>
-
-      <hr>
-
-<!--      <form action="--><?php //route::$current_url; ?><!--" method="post">-->
-<!--        <div class="row">-->
-<!--          <div class="form-group col-sm-6">-->
-<!--            <input class="form-control" type="text" name="title" placeholder="Заголовок">-->
-<!--          </div>-->
-<!--          <div class="form-group col-sm-6">-->
-<!--            <textarea class="form-control" name="description" placeholder="Описание"></textarea>-->
-<!--          </div>-->
-<!--        </div>-->
-<!---->
-<!--        <div class="row">-->
-<!--          <div class="form-group col-sm-6">-->
-<!--            <div class="input-group">-->
-<!--              <div class="input-group-addon">Тип</div>-->
-<!--              <select class="form-control" name="type" required>-->
-<!--                <option value="text" selected>text</option>-->
-<!--                <option value="text">number</option>-->
-<!--                <option value="text">email</option>-->
-<!--                <option value="text">tel</option>-->
-<!--                <option value="text">date</option>-->
-<!--              </select>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div class="form-group col-sm-6">-->
-<!--            <input class="form-control" type="text" name="name" placeholder="name" required>-->
-<!--          </div>-->
-<!--        </div>-->
-<!---->
-<!--        <div class="row">-->
-<!--          <div class="form-group col-sm-6">-->
-<!--            <input class="form-control" type="text" name="placeholder" placeholder="placeholder">-->
-<!--          </div>-->
-<!--          <div class="form-group col-sm-6">-->
-<!--            <input class="form-control" type="text" name="value" placeholder="value">-->
-<!--          </div>-->
-<!--        </div>-->
-<!---->
-<!--        <div class="row">-->
-<!--          <div class="col-sm-6"><button class="btn btn-success" type="submit">Сохранить</button></div>-->
-<!--          <div class="checkbox col-sm-6"><label><input type="checkbox"> required?</label></div>-->
-<!--        </div>-->
-<!--      </form>-->
-
-      <hr>
-
-    </div>
-
-    <div class="col-sm-6">
+    <div class="col-sm-6 pull-right">
       <div class="form-group">
         <label for="template">Вступительная часть</label>
         <textarea class="form-control" name="template" id="template" rows="8"><?php echo @$data["petition"]["template"]; ?></textarea>
@@ -116,13 +63,14 @@
 
       <div class="row">
         <div class="col-sm-4">
-          <?php if(route::post_data()): ?>
+          <?php if(route::get_data()): ?>
             <input type="hidden" name="id" value="<?php echo @$data["petition"]["id"]; ?>">
           <?php endif; ?>
+          <input type="hidden" name="is_petition" value="true">
           <button class="btn btn-success" type="submit">Сохранить</button>
         </div>
         <div class="col-sm-4">
-          <a class="btn btn-danger" href="<?php route::$current_url ?>&action=delete">Удалить</a>
+          <a class="btn btn-danger" href="<?php echo route::$current_url; ?>&action=delete">Удалить</a>
         </div>
         <div class="col-sm-4">
           <a class="btn btn-default" href="<?php echo route::$controller_url; ?>/petitions">Все шаблоны</a>
@@ -130,6 +78,121 @@
       </div>
     </div>
 
+</form>
+
+
+<div class="col-sm-6 pull-left">
+
+  <button class="btn btn-default" id="add_field">Добавить поле</button>
+  <hr>
+
+  <div id="petition_fields">
+
+    <?php if( (isset($data["fields"])) && (!empty($data["fields"])) ): ?>
+      <?php foreach($data["fields"] as $key => $field_array): ?>
+        <div class="petition-field">
+          <form action="<?php echo route::$action_url; ?>" method="post">
+            <div class="row">
+              <div class="form-group col-sm-6">
+                <input class="form-control" type="text" name="title" placeholder="Заголовок" value="<?php echo @$field_array["title"]; ?>">
+              </div>
+              <div class="form-group col-sm-6">
+                <textarea class="form-control" name="description" placeholder="Описание" value="<?php echo @$field_array["description"]; ?>"></textarea>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-sm-6">
+                <div class="input-group">
+                  <div class="input-group-addon">Тип</div>
+                  <?php $types = ["text", "number", "email", "tel", "date"]; ?>
+                  <select class="form-control" name="type" required>
+                    <?php foreach($types as $type): ?>
+                      <option value="<?php echo $type; ?>"
+                          <?php if(@$field_array["type"] == $type) echo "selected"; ?>>
+                        <?php echo $type; ?>
+                      </option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group col-sm-6">
+                <input class="form-control" type="text" name="name" placeholder="name" value="<?php echo @$field_array["name"]; ?>" required>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-sm-6">
+                <input class="form-control" type="text" name="placeholder" placeholder="placeholder" value="<?php echo @$field_array["placeholder"]; ?>">
+              </div>
+              <div class="form-group col-sm-6">
+                <input class="form-control" type="text" name="value" placeholder="value" value="<?php echo @$field_array["value"]; ?>">
+              </div>
+            </div>
+            <div class="row">
+              <?php if(route::get_data()): ?>
+                <input type="hidden" name="template_id" value="<?php echo $_GET["id"]; ?>">
+              <?php endif; ?>
+              <input type="hidden" name="is_field" value="true">
+              <input type="hidden" name="id" value="<?php echo @$field_array["id"]; ?>">
+              <div class="col-sm-6"><button class="btn btn-success" type="submit">Сохранить</button></div>
+              <div class="checkbox col-sm-6"><label><input name="required" type="checkbox" <?php if(@$field_array["required"] == 1) echo "checked"; ?>> required?</label></div>
+            </div>
+          </form>
+        </div>
+        <hr>
+      <?php endforeach; ?>
+    <?php endif; ?>
+
   </div>
 
-</form>
+</div>
+
+</div>
+
+
+
+<!-- ШАБЛОН ПОЛЯ ДЛЯ JS -->
+<script type="text/html" id="petition_field_template">
+          <form action="<?php echo route::$action_url; ?>" method="post">
+            <div class="row">
+              <div class="form-group col-sm-6">
+                <input class="form-control" type="text" name="title" placeholder="Заголовок">
+              </div>
+              <div class="form-group col-sm-6">
+                <textarea class="form-control" name="description" placeholder="Описание"></textarea>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-sm-6">
+                <div class="input-group">
+                  <div class="input-group-addon">Тип</div>
+                  <?php $types = ["text", "number", "email", "tel", "date"]; ?>
+                  <select class="form-control" name="type" required>
+                    <?php foreach($types as $type): ?>
+                      <option value="<?php echo $type; ?>"><?php echo $type; ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group col-sm-6">
+                <input class="form-control" type="text" name="name" placeholder="name" required>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-sm-6">
+                <input class="form-control" type="text" name="placeholder" placeholder="placeholder">
+              </div>
+              <div class="form-group col-sm-6">
+                <input class="form-control" type="text" name="value" placeholder="value">
+              </div>
+            </div>
+            <div class="row">
+              <?php if(route::get_data()): ?>
+                <input type="hidden" name="template_id" value="<?php echo $_GET["id"]; ?>">
+              <?php endif; ?>
+              <input type="hidden" name="is_field" value="true">
+              <div class="col-sm-6"><button class="btn btn-success" type="submit">Сохранить</button></div>
+              <div class="checkbox col-sm-6"><label><input name="required" type="checkbox"> required?</label></div>
+            </div>
+          </form>
+        <hr>
+</script>

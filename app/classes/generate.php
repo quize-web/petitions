@@ -11,6 +11,7 @@ class generate
         echo "<div class='row'>";
         switch ($subarray) {
           case "error": $alert_type_class = "danger"; break;
+          case "warning": $alert_type_class = "warning"; break;
           case "info": $alert_type_class = "info"; break;
           case "success": $alert_type_class = "success"; break;
           default: return false; break;
@@ -31,6 +32,7 @@ class generate
       foreach ($data["alerts"] as $alert_type => $alert_list) {
         switch ($alert_type) {
           case "error": $alert_type_class = "danger"; break;
+          case "warning": $alert_type_class = "warning"; break;
           case "info": $alert_type_class = "info"; break;
           case "success": $alert_type_class = "success"; break;
           default: return false; break;

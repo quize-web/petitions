@@ -1,6 +1,5 @@
 <div class="jumbotron">
 
-
   <div class="container">
     <h1>Восстановление пароля</h1>
     <?php if(!empty($data["alerts"]["info"]["success"])): ?>

@@ -133,7 +133,7 @@ final class database
       $data = $query->fetch(PDO::FETCH_ASSOC)[$what_return__string];
     } else return "Ошибка в аргументе return_value!";
 
-    if(empty($data)) return "Данных нет!";
+    if(empty($data)) return false;
     else return $data;
 
   }

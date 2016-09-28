@@ -14,11 +14,11 @@ class controller__sign_up extends controller
 
     if($data = $this->model->verify()) { $this->view->generate("main", "sign_up", $data); exit(); }
     if($email = $this->model->save()) $this->view->generate("main", "sign_up--save", $email);
-      else $this->view->generate("main", "sign_up", $data = ["error" => ["database" => "Ошибка при добавлении нового пользователя в базу данных!"]]);
+      else $this->view->generate("main", "sign_up", $data = ["alerts" => ["error" => ["database" => "Ошибка при добавлении нового пользователя в базу данных!"]]]);
   }
 
   public function action__activate() {
-    route::check(route::get_data(true, "hash", 1));
+    route::check(route::get_data(true, ["hash" => ""], 1));
 
     if($this->model->activate()) $this->view->generate("main", "sign_up--activate");
     else route::error();
