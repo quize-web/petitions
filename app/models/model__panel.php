@@ -7,7 +7,27 @@ class model__panel
   // USER PANEL
   //////////////////////////////////////////////
 
-  //
+  public function petition() {
+
+    if(route::get_data(true, ["template" => ""])) {
+
+      $template_id = $_GET["template"];
+      $data["template"] = database::get("petition_templates", [
+          "name" => "",
+          "price" => "",
+          "category_id -> petition_categories -> name" => "category"
+      ], ["id" => $template_id]);
+      return $data;
+
+    } elseif(route::post_data()) {
+
+
+
+    } else {
+      return false;
+    }
+
+  }
 
 
 
@@ -36,18 +56,27 @@ class model__panel
   //////////////////////////////////////////////
 
   public function get_petition_templates() {
-    $data["petitions"] = database::get( "petition_templates", [
-        "name" => "Название",
-        "category_id -> petition_categories -> name" => "Категория",
-        "price" => "Цена",
-        "id" => ""]);
-    if(route::action("deleted")) $data["alerts"]["warning"]["deleted"] = "Удалено!";
-    return $data;
+    if(user::access("user")) {
+      $data["petition_templates"] = database::get("petition_templates", [
+          "name" => "",
+          "category_id -> petition_categories -> name" => "category",
+          "pay" => "",
+          "id" => ""]);
+      return $data;
+    } elseif(user::access("admin")) {
+      $data["petitions"] = database::get("petition_templates", [
+          "name" => "Название",
+          "category_id -> petition_categories -> name" => "Категория",
+          "price" => "Цена",
+          "id" => ""]);
+      if (route::action("deleted")) $data["alerts"]["warning"]["deleted"] = "Удалено!";
+      return $data;
+    } else return false;
   }
 
   //////////////////////////////////////////////
 
-  public function petition_template() { // TODO: РАЗДЕЛИТЬ НА КЛАССЫ
+  public function petition_template() {
 
     if(route::get_data()) {
 
@@ -60,8 +89,14 @@ class model__panel
           route::redirect("/panel/petitions", ["action" => "deleted"]);
         }
 
+        if(route::action("delete_field")) {
+          database::delete("template_fields", $_GET["field_id"]);
+          route::redirect("/panel/petition", ["id" => $id,"action" => "field_deleted"]);
+        }
+
         if(route::action("petition_saved")) $data["alerts"]["success"]["saved"] = "Шаблон сохранен!";
         if(route::action("field_saved")) $data["alerts"]["success"]["saved"] = "Поле сохранено!";
+        if(route::action("field_deleted")) $data["alerts"]["warning"]["deleted"] = "Поле удалено!";
 
         if($data["petition"] = database::check("petition_templates", ["id" => $id], true, "all")) {
           if($data["fields"] = database::get("template_fields", ["*"], ["template_id" => $id]));
@@ -161,15 +196,6 @@ class model__panel
 
 
       } else route::redirect("panel/petitions");
-
-
-
-    } else { // НОВОЕ ЗАЯВЛЕНИЕ
-
-
-      return true;
-//      if($id = database::insert("petition_templates", [], true, true)) route::redirect("action", ["id" => $id]);
-//      else return false;
 
     }
 

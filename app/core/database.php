@@ -110,7 +110,7 @@ final class database
 
     if(!empty($condition)) {
       foreach($condition as $column => $value) {
-        $condition__string .= " AND `$column` = ?";
+        $condition__string .= " AND $main_table_name.`$column` = ?";
         $condition__values[] = $value;
       }
       $condition__string = trim($condition__string, " AND ");
@@ -118,7 +118,7 @@ final class database
 
 
 //    return "SELECT $what_return__string FROM $table_names WHERE $condition__string;";
-    if( !empty($condition__string) || !empty($condition__values) ) {
+    if( (!empty($condition__string)) || (!empty($condition__values)) ) {
       $query = $pdo->prepare("SELECT $what_return__string FROM $table_names WHERE $condition__string;");
       $query->execute($condition__values); if(!$query) die(print "Ошибка при выборке данных: {$pdo->errorInfo()["2"]}.");
     } else {

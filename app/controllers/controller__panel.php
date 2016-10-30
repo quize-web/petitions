@@ -5,7 +5,6 @@ class controller__panel extends controller
 
   public function action__index() {
     route::check(user::session());
-
     if (user::is_active(false)) $this->view->generate("user_panel", "user_panel--not_active");
 
     if(user::access("user")) $this->view->generate("user_panel", "user_panel");
@@ -17,7 +16,6 @@ class controller__panel extends controller
 
   public function action__petitions() {
     route::check(user::session());
-
     if (user::is_active(false)) $this->view->generate("user_panel", "user_panel--not_active");
 
 
@@ -41,13 +39,22 @@ class controller__panel extends controller
 
 
     if(user::access("user")) {
-      $this->view->generate("user_panel", "user_panel--petition");
+      if(route::get_data() || route::post_data()) {
+        if($data = $this->model->petition())
+          $this->view->generate("user_panel--wide", "user_panel--petition", $data);
+      } else {
+        if($petition_templates = $this->model->get_petition_templates())
+          $this->view->generate("user_panel--wide", "user_panel--petition_templates", $petition_templates);
+      }
     }
 
     elseif(user::access("admin")) {
-//      $this->view->generate("admin_panel--wide", "admin_panel--petition");
-      if($data = $this->model->petition_template()) $this->view->generate("admin_panel--wide", "admin_panel--petition", $data);
-//      else route::redirect("/panel/petitions");
+      if(route::get_data() || route::post_data()) {
+        if($data = $this->model->petition_template())
+          $this->view->generate("admin_panel--wide", "admin_panel--petition", $data);
+      } else {
+        $this->view->generate("admin_panel--wide", "admin_panel--petition");
+      }
     }
 
     else route::error();

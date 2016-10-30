@@ -1,6 +1,11 @@
 <div class="jumbotron">
   <div class="container">
     <h1>Главная страница!</h1>
+    <p>
+      <?php
+      echo "<pre>"; print_r($_COOKIE); echo "</pre>";
+      ?>
+    </p>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores ducimus excepturi exercitationem maxime natus obcaecati placeat? Commodi doloribus est suscipit?</p>
     <p><a class="btn btn-primary btn-lg" href="/about" role="button">Подробнее &raquo;</a></p>
   </div>
